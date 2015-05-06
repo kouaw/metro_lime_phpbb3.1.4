@@ -1,0 +1,301 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" dir="{S_CONTENT_DIRECTION}" lang="{S_USER_LANG}" xml:lang="{S_USER_LANG}">
+<head>
+
+<meta http-equiv="content-type" content="text/html; charset={S_CONTENT_ENCODING}" />
+<meta http-equiv="content-style-type" content="text/css" />
+<meta http-equiv="content-language" content="{S_USER_LANG}" />
+<meta http-equiv="imagetoolbar" content="no" />
+<meta name="resource-type" content="document" />
+<meta name="distribution" content="global" />
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
+{META}
+<title>{SITENAME} &bull; <!-- IF S_IN_MCP -->{L_MCP} &bull; <!-- ELSEIF S_IN_UCP -->{L_UCP} &bull; <!-- ENDIF -->{PAGE_TITLE}</title>
+
+<!-- IF S_ENABLE_FEEDS -->
+	<!-- IF S_ENABLE_FEEDS_OVERALL --><link rel="alternate" type="application/atom+xml" title="{L_FEED} - {SITENAME}" href="{U_FEED}" /><!-- ENDIF -->
+	<!-- IF S_ENABLE_FEEDS_NEWS --><link rel="alternate" type="application/atom+xml" title="{L_FEED} - {L_FEED_NEWS}" href="{U_FEED}?mode=news" /><!-- ENDIF -->
+	<!-- IF S_ENABLE_FEEDS_FORUMS --><link rel="alternate" type="application/atom+xml" title="{L_FEED} - {L_ALL_FORUMS}" href="{U_FEED}?mode=forums" /><!-- ENDIF -->
+	<!-- IF S_ENABLE_FEEDS_TOPICS --><link rel="alternate" type="application/atom+xml" title="{L_FEED} - {L_FEED_TOPICS_NEW}" href="{U_FEED}?mode=topics" /><!-- ENDIF -->
+	<!-- IF S_ENABLE_FEEDS_TOPICS_ACTIVE --><link rel="alternate" type="application/atom+xml" title="{L_FEED} - {L_FEED_TOPICS_ACTIVE}" href="{U_FEED}?mode=topics_active" /><!-- ENDIF -->
+	<!-- IF S_ENABLE_FEEDS_FORUM and S_FORUM_ID --><link rel="alternate" type="application/atom+xml" title="{L_FEED} - {L_FORUM} - {FORUM_NAME}" href="{U_FEED}?f={S_FORUM_ID}" /><!-- ENDIF -->
+	<!-- IF S_ENABLE_FEEDS_TOPIC and S_TOPIC_ID --><link rel="alternate" type="application/atom+xml" title="{L_FEED} - {L_TOPIC} - {TOPIC_TITLE}" href="{U_FEED}?f={S_FORUM_ID}&amp;t={S_TOPIC_ID}" /><!-- ENDIF -->
+<!-- ENDIF -->
+
+<!--
+	phpBB style name: Metro Lime v.1.0.5
+	Based on style:   prosilver (this is the default phpBB3 style)
+	Original author:  Tom Beddard ( http://www.subBlue.com/ )
+	Modified by: PixelGoose Studio
+-->
+
+<script type="text/javascript">
+// <![CDATA[
+	var jump_page = '{LA_JUMP_PAGE}:';
+	var on_page = '{ON_PAGE}';
+	var per_page = '{PER_PAGE}';
+	var base_url = '{A_BASE_URL}';
+	var style_cookie = 'phpBBstyle';
+	var style_cookie_settings = '{A_COOKIE_SETTINGS}';
+	var onload_functions = new Array();
+	var onunload_functions = new Array();
+
+	<!-- IF S_USER_PM_POPUP and S_NEW_PM -->
+		var url = '{UA_POPUP_PM}';
+		window.open(url.replace(/&amp;/g, '&'), '_phpbbprivmsg', 'height=225,resizable=yes,scrollbars=yes, width=400');
+	<!-- ENDIF -->
+
+	/**
+	* Find a member
+	*/
+	function find_username(url)
+	{
+		popup(url, 760, 570, '_usersearch');
+		return false;
+	}
+
+	/**
+	* New function for handling multiple calls to window.onload and window.unload by pentapenguin
+	*/
+	window.onload = function()
+	{
+		for (var i = 0; i < onload_functions.length; i++)
+		{
+			eval(onload_functions[i]);
+		}
+	};
+
+	window.onunload = function()
+	{
+		for (var i = 0; i < onunload_functions.length; i++)
+		{
+			eval(onunload_functions[i]);
+		}
+	};
+
+// ]]>
+</script>
+<script type="text/javascript" src="{T_SUPER_TEMPLATE_PATH}/styleswitcher.js"></script>
+<script type="text/javascript" src="{T_SUPER_TEMPLATE_PATH}/forum_fn.js"></script>
+
+<link href="{T_THEME_PATH}/print.css" rel="stylesheet" type="text/css" media="print" title="printonly" />
+<link href="{T_STYLESHEET_LINK}" rel="stylesheet" type="text/css" media="screen, projection" />
+
+<link href="{T_THEME_PATH}/normal.css" rel="stylesheet" type="text/css" title="A" />
+<link href="{T_THEME_PATH}/medium.css" rel="alternate stylesheet" type="text/css" title="A+" />
+<link href="{T_THEME_PATH}/large.css" rel="alternate stylesheet" type="text/css" title="A++" />
+
+<!-- IF S_CONTENT_DIRECTION eq 'rtl' -->
+	<link href="{T_THEME_PATH}/bidi.css" rel="stylesheet" type="text/css" media="screen, projection" />
+<!-- ENDIF -->
+
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+<!-- IF not S_USER_LOGGED_IN and not S_IS_BOT -->
+<script type="text/javascript">
+$(document).ready(function() {
+	$('a.login-window').click(function() {
+		
+		// Getting the variable's value from a link 
+		var loginBox = this.hash;
+
+		//Fade in the Popup and add close button
+		$(loginBox).fadeIn(300);
+		
+		//Set the center alignment padding + border
+		var popMargTop = ($(loginBox).height() + 24) / 2; 
+		var popMargLeft = ($(loginBox).width() + 24) / 2; 
+		
+		$(loginBox).css({ 
+			'margin-top' : -popMargTop,
+			'margin-left' : -popMargLeft
+		});
+		
+		// Add the mask to body
+		$('body').append('<div id="mask"></div>');
+		$('#mask').fadeIn(300);
+		
+		return false;
+	});
+	
+	// When clicking on the button close or the mask layer the popup closed
+	$('a.close, #mask').live('click', function() { 
+	  $('#mask , .login-popup').fadeOut(300 , function() {
+		$('#mask').remove();  
+	}); 
+	return false;
+	});
+	
+	$('#navbar_username').focus(function() {
+		$('#navbar_username').parent().addClass('active');
+	}); 
+	$('#navbar_username').blur(function() {
+		$('#navbar_username').parent().removeClass('active');
+	}); 
+	$('#navbar_password').focus(function() {
+		$('#navbar_password').parent().addClass('active');
+	}); 
+	$('#navbar_password').blur(function() {
+		$('#navbar_password').parent().removeClass('active');
+	}); 
+
+});
+</script>
+<!-- ENDIF -->
+<script type="text/javascript">
+	$(document).ready(function() {
+		$(".toggleMenuButton").click(function () {
+			$(".tabs").slideToggle("fast");
+			$(".toggleMenuButton").toggleClass("active");
+		})
+
+		$(window).resize(function() {
+		    //small-screen
+		    if (window.innerWidth < 767) {
+		        $(".tabs").css('display', '');
+			    $('.toggleMenuButton').removeClass('active');
+		    }
+		        //end small-screen
+		}) .resize(); // trigger resize event
+
+	});
+</script>
+
+<!--[if lte IE 8]><script type="text/javascript" src="{T_SUPER_TEMPLATE_PATH}/respond.min.js"></script><![endif]-->
+
+<!-- Google Web Fonts -->
+<link href='//fonts.googleapis.com/css?family=Open+Sans:300,400,600&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+
+</head>
+
+<body id="phpbb" class="section-{SCRIPT_NAME} {S_CONTENT_DIRECTION}">
+
+<div id="wrap">
+	<a id="top" name="top" accesskey="t"></a>
+	<div id="page-header">
+ <div id="div_jeedom_bar" style="background-color : #eaeaea;height: 40px;width: 100%;position : fixed;top : 0px;left : 0px;z-index : 9999;">
+                    <a href="http://jeedom.fr">
+                    <img src="http://jeedom.fr/images/logo-jeedom-grand-nom-couleur.svg" height="30" style="margin-left: 20px;margin-top : 5px;height:30px"/>
+                    </a>
+                    <span style="float : right;font-weight:bold;font-size : 1.8em;margin-top:8px;font-family: 'Droid Sans',sans-serif;">
+                        <a style="margin-right : 55px;color:#7d7d7d;text-decoration: none;" href="http://jeedom.fr">Site</a>
+                        <a style="margin-right : 55px;color:#7d7d7d;text-decoration: none;" href="http://wiki.jeedom.fr">Wiki</a>
+                        <a style="margin-right : 45px;color:#7d7d7d;text-decoration: none;" href="http://blog.jeedom.fr">Blog</a> 
+                        <span style="background-color:#7d7d7d;padding : 9px 0px 5px 30px;">
+                            <a style="margin-right : 25px;color:#eaeaea;text-decoration: none;" href="http://forum.jeedom.fr">Forum</a> 
+                        </span>
+                        <a style="margin-right : 35px;margin-left : 30px;color:#7d7d7d;text-decoration: none;" href="https://market.jeedom.fr">Market</a>
+                        <a style="margin-right : 35px;margin-left : 10px;color:#7d7d7d;text-decoration: none;" href="http://doc.jeedom.fr">Doc</a>
+                    </span>
+                </div>
+    	<div id="above-headerbar" style="margin-top : 40px;">
+			<!-- IF not S_IS_BOT and S_USER_LOGGED_IN -->
+			<ul class="user-links">
+                <li><a href="{U_PROFILE}" title="{L_PROFILE}" accesskey="e">{L_PROFILE}</a></li>
+                    <!-- IF S_DISPLAY_PM --> <li>(<a href="{U_PRIVATEMSGS}">{PRIVATE_MESSAGE_INFO}</a>)</li><!-- ENDIF -->
+                <!-- IF S_DISPLAY_SEARCH -->
+                <li><a href="{U_SEARCH_SELF}">{L_SEARCH_SELF}</a></li>
+                <!-- ENDIF -->
+                <!-- IF U_RESTORE_PERMISSIONS -->
+                <li><a href="{U_RESTORE_PERMISSIONS}">{L_RESTORE_PERMISSIONS}</a></li>
+                <!-- ENDIF -->
+                <li><a href="{U_LOGIN_LOGOUT}" title="{L_LOGIN_LOGOUT}" accesskey="x">{L_LOGIN_LOGOUT}</a></li>
+			</ul>
+			<!-- ENDIF -->
+            
+            <!-- IF not S_USER_LOGGED_IN and not (S_SHOW_COPPA or S_REGISTRATION) -->
+			<ul class="user-links">
+                <!-- IF S_REGISTER_ENABLED --><li><a href="{U_REGISTER}">{L_REGISTER}</a>&nbsp;&nbsp;|</li><!-- ENDIF -->
+                <li><a href="#login-box" class="login-window" title="{L_LOGIN_LOGOUT}" accesskey="x">{L_LOGIN_LOGOUT}</a><a href="{U_LOGIN_LOGOUT}" class="login-link" title="{L_LOGIN_LOGOUT}" accesskey="x">{L_LOGIN_LOGOUT}</a></li>
+			</ul>
+
+			<div id="login-box" class="login-popup">
+			    <a href="#" class="close"><img src="{T_THEME_PATH}/images/close_popup.png" class="close-button" title="Close" alt="Close" /></a>
+			    <div id="login-text">{L_LOGIN_LOGOUT}</div>
+
+				<form method="post" action="{S_LOGIN_ACTION}" class="quick-login">
+					<fieldset>
+						<div class="navbar_username_outer">
+							<label for="username">{L_USERNAME}:</label>&nbsp;<br /><input type="text" name="username" id="navbar_username" size="10" class="inputbox" title="{L_USERNAME}" />
+						</div>
+
+						<div class="navbar_password_outer">
+							<label for="password">{L_PASSWORD}:</label>&nbsp;<br /><input type="password" name="password" id="navbar_password" size="10" class="inputbox" title="{L_PASSWORD}" />
+						</div>
+
+
+
+
+						<div class="login-buttons">
+							<input type="submit" name="login" value="{L_LOGIN}" class="button2" />
+							{S_LOGIN_REDIRECT}
+							<!-- IF S_AUTOLOGIN_ENABLED -->
+								<label id="autologin_label" for="autologin">{L_LOG_ME_IN} <input type="checkbox" name="autologin" id="autologin" /></label>
+							<!-- ENDIF -->
+						</div>
+					</fieldset>
+				</form>			        
+					<!-- IF S_REGISTER_ENABLED --><a class="register-link" href="{U_REGISTER}">{L_REGISTER}</a><!-- ENDIF -->
+			        
+			</div>
+
+            <!-- ENDIF -->
+            <!-- IF S_DISPLAY_SEARCH and not S_IN_SEARCH -->
+			<div class="search-box">
+				<form action="{U_SEARCH}" method="get" id="search">
+				<fieldset>
+                	<div class="search-box-inner">
+                        <input class="button2" value="{L_SEARCH}" type="submit" />
+                        <input name="keywords" id="keywords" type="text" maxlength="128" title="{L_SEARCH_KEYWORDS}" class="inputbox search" value="<!-- IF SEARCH_WORDS-->{SEARCH_WORDS}<!-- ELSE -->{L_SEARCH_MINI}<!-- ENDIF -->" onclick="if(this.value=='{LA_SEARCH_MINI}')this.value='';" onblur="if(this.value=='')this.value='{LA_SEARCH_MINI}';" />
+                    </div>
+                    &nbsp;<a href="{U_SEARCH}" class="search-adv-link" title="{L_SEARCH_ADV_EXPLAIN}">{L_SEARCH_ADV}</a> {S_SEARCH_HIDDEN_FIELDS}
+				</fieldset>
+				</form>
+			</div>
+            <!-- ENDIF -->
+        </div>
+        
+        <div id="header">
+        	<a href="{U_INDEX}" id="logo" title="{L_INDEX}">{SITE_LOGO_IMG}</a>
+
+<!-- INCLUDE tabs.html -->
+
+        </div>
+        <div id="subheader-menu">
+            <!-- IF S_DISPLAY_SEARCH or (S_USER_LOGGED_IN and not S_IS_BOT) -->
+            <ul class="links right">
+                <!-- IF not S_IS_BOT and U_MARK_FORUMS --><li id="submenu-mark-read"><a href="{U_MARK_FORUMS}" accesskey="m">{L_MARK_FORUMS_READ}</a></li><!-- ENDIF -->
+            </ul>
+            <ul class="links">
+                <!-- IF S_DISPLAY_SEARCH -->
+                    <li id="submenu-unanswered"><a href="{U_SEARCH_UNANSWERED}">{L_SEARCH_UNANSWERED}</a></li><!-- IF S_LOAD_UNREADS --><li id="submenu-unread"><a href="{U_SEARCH_UNREAD}">{L_SEARCH_UNREAD}</a></li><!-- ENDIF --><!-- IF S_USER_LOGGED_IN --><li id="submenu-search-new"><a href="{U_SEARCH_NEW}">{L_SEARCH_NEW}</a></li><!-- ENDIF --><li id="submenu-active-topics"><a href="{U_SEARCH_ACTIVE_TOPICS}">{L_SEARCH_ACTIVE_TOPICS}</a></li>
+                <!-- ENDIF -->
+            </ul>
+            <!-- ENDIF -->
+        </div>
+        
+        <div id="breadcrumbs">
+        	<a class="icon-home" href="{U_INDEX}" accesskey="h">{L_INDEX}</a> <!-- BEGIN navlinks -->&nbsp;<img class="navbit-arrow" src="{T_THEME_PATH}/images/navbit-arrow-right.png" alt="" />&nbsp;<a href="{navlinks.U_VIEW_FORUM}">{navlinks.FORUM_NAME}</a><!-- END navlinks -->
+        </div>
+
+		<ul class="thread-icons">
+          <!-- IF U_EMAIL_TOPIC --><li class="rightside"><a href="{U_EMAIL_TOPIC}" title="{L_EMAIL_TOPIC}" class="sendemail">{L_EMAIL_TOPIC}</a></li><!-- ENDIF -->
+          <!-- IF U_EMAIL_PM --><li class="rightside"><a href="{U_EMAIL_PM}" title="{L_EMAIL_PM}" class="sendemail">{L_EMAIL_PM}</a></li><!-- ENDIF -->
+          <!-- IF U_PRINT_TOPIC --><li class="rightside"><a href="{U_PRINT_TOPIC}" title="{L_PRINT_TOPIC}" accesskey="p" class="print">{L_PRINT_TOPIC}</a></li><!-- ENDIF -->
+          <!-- IF U_PRINT_PM --><li class="rightside"><a href="{U_PRINT_PM}" title="{L_PRINT_PM}" accesskey="p" class="print">{L_PRINT_PM}</a></li><!-- ENDIF -->
+		</ul>
+
+	</div>
+
+	<a name="start_here"></a>
+
+
+
+	<div id="page-body">
+		<!-- IF S_BOARD_DISABLED and S_USER_LOGGED_IN and (U_MCP or U_ACP) -->
+		<div id="information" class="rules">
+				<strong>{L_INFORMATION}:</strong> {L_BOARD_DISABLED}
+		</div>
+		<!-- ENDIF -->

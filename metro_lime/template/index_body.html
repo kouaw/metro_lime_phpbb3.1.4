@@ -1,0 +1,29 @@
+<!-- INCLUDE overall_header.html -->
+
+<div id="page-body-inner" class="no-sidebar">
+
+<!-- INCLUDE forumlist_body.html -->
+
+
+<!-- IF S_DISPLAY_ONLINE_LIST -->
+	<!-- IF U_VIEWONLINE --><h3 class="dark-header"><a href="{U_VIEWONLINE}">{L_WHO_IS_ONLINE}</a></h3><!-- ELSE --><h3 class="dark-header">{L_WHO_IS_ONLINE}</h3><!-- ENDIF -->
+	<div class="dark-header-content">{TOTAL_USERS_ONLINE} ({L_ONLINE_EXPLAIN})<br />{RECORD_USERS}<br /> <br />{LOGGED_IN_USER_LIST}
+	<!-- IF LEGEND --><br /><em>{L_LEGEND}: {LEGEND}</em><!-- ENDIF --></div>
+<!-- ENDIF -->
+
+<!-- IF S_DISPLAY_BIRTHDAY_LIST and BIRTHDAY_LIST -->
+	<h3 class="dark-header">{L_BIRTHDAYS}</h3>
+	<div class="dark-header-content"><!-- IF BIRTHDAY_LIST -->{L_CONGRATULATIONS}: <strong>{BIRTHDAY_LIST}</strong><!-- ELSE -->{L_NO_BIRTHDAYS}<!-- ENDIF --></div>
+<!-- ENDIF -->
+
+<!-- IF NEWEST_USER -->
+	<h3 class="dark-header">{L_STATISTICS}</h3>
+	<div class="dark-header-content">{TOTAL_POSTS} &bull; {TOTAL_TOPICS} &bull; {TOTAL_USERS} &bull; {NEWEST_USER}</div>
+<!-- ENDIF -->
+
+
+</div>
+
+<!-- Sidebar goes below -->
+
+<!-- INCLUDE overall_footer.html -->

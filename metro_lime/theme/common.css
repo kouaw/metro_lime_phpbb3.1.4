@@ -1,0 +1,1131 @@
+/* General Markup Styles
+---------------------------------------- */
+
+* {
+	/* Reset browsers default margin, padding and font sizes */
+	margin: 0;
+	padding: 0;
+}
+
+html {
+	/*font-size: 0.813em;*/
+	/* Always show a scrollbar for short pages - stops the jump when the scrollbar appears. non-IE browsers */
+	height: 101%;
+}
+
+body {
+	/* Text-Sizing with ems: http://www.clagnut.com/blog/348/ */
+	font-family: 'Open Sans', sans-serif;
+	color: #828282;
+	background-color: #F6F6F6;
+	/*font-size: 62.5%;			 This sets the default font size to be equivalent to 10px */
+	font-size: 0.813em;
+	margin: 0;
+	padding: 12px 0;
+}
+
+h1 {
+	/* Forum name */
+	font-family: 'Open Sans', sans-serif;
+	margin-right: 200px;
+	color: #FFFFFF;
+	margin-top: 15px;
+	font-weight: bold;
+	font-size: 2em;
+	letter-spacing: -1px;
+}
+
+h2 {
+	/* Forum header titles */
+	font-family: 'Open Sans', sans-serif;
+	font-weight: normal;
+	color: #3f3f3f;
+	font-size: 2em;
+	margin: 0.8em 0 0.2em 0;
+	letter-spacing: -1px;
+}
+
+h2.solo {
+	margin-bottom: 1em;
+}
+#message h2, #confirm h2 {
+	border-bottom: solid 1px #E4E4E4;
+}
+h3 {
+	/* Sub-headers (also used as post headers, but defined later) */
+	font-family: 'Open Sans', sans-serif;
+	font-size: 1.077em;
+	color: #989898;
+}
+
+h4 {
+	/* Forum and topic list titles */
+	font-family: 'Open Sans', sans-serif;
+	font-size: 1.3em;
+}
+
+p {
+	line-height: 1.3em;
+	margin-bottom: 1.5em;
+}
+
+img {
+	border-width: 0;
+    height: auto;
+    max-width: 100%;
+    vertical-align: middle;
+}
+hr {
+	/* Also see tweaks.css */
+	border: 0 none #FFFFFF;
+	border-top: 1px solid #E4E4E4;
+	height: 1px;
+	margin: 6px 0 12px;
+	display: block;
+	clear: both;
+}
+
+hr.dashed {
+	border-top: 1px solid #E4E4E4;
+	margin: 10px 0;
+}
+
+hr.divider {
+	display: none;
+}
+
+p.right {
+	text-align: right;
+}
+
+/* Main blocks
+---------------------------------------- */
+#wrap {
+	width: 1180px;
+	margin: 0 auto;
+}
+
+#simple-wrap {
+	padding: 6px 12px;
+	background-color: #fff;
+	border: solid 1px #E4E4E4;
+	margin: 0 12px;
+}
+#simple-wrap h2 {
+	border-bottom: solid 1px #E4E4E4;
+}
+#page-body {
+	clear: both;
+	overflow: hidden;
+}
+
+#page-footer {
+	clear: both;
+}
+
+#page-footer h3 {
+	margin-top: 20px;
+}
+
+
+/* Search box
+--------------------------------------------- */
+.search-box {
+	color: #82BA1B;
+	float: left;
+	white-space: nowrap; /* For Opera */
+}
+.search-box-inner {
+	display: inline-block;
+    height: 28px;
+    width: 250px;
+    background-color: #FFFFFF;
+    border: 1px solid #E4E4E4;
+    height: 26px;
+	padding: 2px;	
+}
+.search-box #keywords {
+    height: 20px;
+    width: 200px;
+	background-color: #FFF;
+}
+
+.search-box input {
+	border: 1px solid #b0b0b0;
+}
+.search-box .inputbox {
+	padding: 2px 0 2px 6px;
+}
+.topic-actions .search-box {
+	margin: 0 0 12px;
+}
+/* .button1 style defined later, just a few tweaks for the search button version */
+.search-box input.button1 {
+	padding: 1px 5px;
+}
+
+.search-box li {
+	text-align: right;
+	margin-top: 4px;
+}
+
+.search-box img {
+	vertical-align: middle;
+	margin-right: 3px;
+}
+.search-adv-link {
+	line-height: 31px;
+	display: inline-block;
+
+}
+.search-form {
+	overflow: hidden;
+}
+/* Site description and logo */
+#site-description {
+	float: left;
+	width: 70%;
+}
+
+#site-description h1 {
+	margin-right: 0;
+}
+
+
+/* Header and tabs
+---------------------------------------- */
+
+#above-headerbar {
+	height: 36px;
+	margin-bottom: 12px;
+}
+#header {
+	height: 120px;
+	background-color: #82BA1B;
+	margin-bottom: 12px;
+	position: relative;
+}
+#header #logo {
+	position: absolute;
+	left: 12px;
+	bottom: 12px;
+}
+#header .tabs {
+	float: right;
+	padding: 0;
+	margin: 0;
+	list-style-type: none;
+}
+#header li {
+	float: left;
+	padding: 0;
+	margin: 0;
+	height: 120px;
+	width: 120px;
+	border-left: solid 12px #F6F6F6;
+}
+#header li a {
+	color: #fff;
+	height: 120px;
+	width: 120px;
+	display: block;
+	position: relative;
+	font-size: 1.231em;
+	text-transform: lowercase;
+}
+#header li a:hover {
+	background-color: #2E392F;
+}
+#header li a span {
+	position: absolute;
+	left: 12px;
+	bottom: 12px;
+}
+#header li#members-link a {
+	background-image: url("{T_IMAGESET_PATH}/tab-icon-members.png");
+	background-attachment: scroll;
+	background-repeat: no-repeat;
+	background-position: left top;	
+}
+#header li#faq-link a {
+	background-image: url("{T_IMAGESET_PATH}/tab-icon-faq.png");
+	background-attachment: scroll;
+	background-repeat: no-repeat;
+	background-position: left top;	
+}
+#header li#contacts-link a {
+	background-image: url("{T_IMAGESET_PATH}/tab-icon-contacts.png");
+	background-attachment: scroll;
+	background-repeat: no-repeat;
+	background-position: left top;	
+}
+#header li#news-link a {
+	background-image: url("{T_IMAGESET_PATH}/tab-icon-news.png");
+	background-attachment: scroll;
+	background-repeat: no-repeat;
+	background-position: left top;	
+}
+#header li#sample-link a {
+	background-image: url("{T_IMAGESET_PATH}/tab-icon-sample.png");
+	background-attachment: scroll;
+	background-repeat: no-repeat;
+	background-position: left top;	
+}
+
+#subheader-menu {
+	background-color: #2E392F;
+	height: 34px;
+	margin-bottom: 12px;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+	padding: 7px 12px;
+}
+#subheader-menu .links.right {
+	float: right;
+}
+#subheader-menu .links.right li {
+	margin-right: 0;
+}
+#subheader-menu .links li {
+	float: left;
+	list-style: none;
+	margin-right: 12px;
+}
+#subheader-menu .links li a {
+	color: #ffffff;
+}
+
+#breadcrumbs {
+	margin-bottom: 12px;
+}
+.navbit-arrow {
+	margin: 0 6px;
+	vertical-align: middle;
+}
+/* Round cornered boxes and backgrounds
+---------------------------------------- */
+.headerbar {
+	background: #ebebeb none repeat-x 0 0;
+	color: #FFFFFF;
+	margin-bottom: 4px;
+	padding: 0 5px;
+}
+
+.navbar {
+	padding: 12px 0;
+	border-top: solid 1px #E4E4E4;
+	border-bottom: solid 1px #E4E4E4;
+	margin-bottom: 12px;
+}
+
+.forabg {
+	background: #b1b1b1 none repeat-x 0 0;
+	margin-bottom: 12px;
+	clear: both;
+}
+
+.forumbg {
+	background: #b1b1b1 none repeat-x 0 0;
+	margin-bottom: 12px;
+	clear: both;
+}
+.forum-moderators,
+.forum-subforums {
+	margin-top: 6px;
+	font-size: 0.846em;
+}
+.forum-moderators + .forum-subforums {
+	margin-top: 0;
+}
+.forum-name {
+	padding-left: 12px;
+}
+.panel {
+	margin-bottom: 12px;
+	padding: 0 10px;
+	color: #3f3f3f;
+}
+.panel.no-topics {
+	padding: 48px 0;
+	text-align: center;
+	font-size: 1.231em;
+	background-color: #fff;
+}
+.panel.bg2 {
+	border: 0;
+	background-color: transparent;
+	padding: 0;
+}
+.post {
+	padding: 12px;
+	margin-bottom: 12px;
+	background-repeat: no-repeat;
+	background-position: 100% 0;
+	border: solid 1px #E4E4E4;
+	position: relative;
+}
+#preview {
+	overflow: hidden;
+}
+.post:target .content {
+	color: #000000;
+}
+
+.post:target h3 a {
+	color: #000000;
+}
+
+.bg1	{ background-color: #f7f7f7;}
+.bg2	{ background-color: #f2f2f2; }
+.bg3	{ background-color: #ebebeb; }
+
+.rowbg {
+	margin: 5px 5px 2px 5px;
+}
+
+.ucprowbg {
+	background-color: #e2e2e2;
+}
+
+.fieldsbg {
+	background-color: #eaeaea;
+}
+
+
+
+/* Horizontal lists
+----------------------------------------*/
+
+.user-links {
+	float: right;
+}
+.user-links li {
+	float: left;
+	list-style-image: none;
+	list-style-type: none;
+	margin-right: 12px;
+}
+.user-links li:last-child {
+	margin-right: 0px;
+}
+
+.user-links {
+	/*font-size: 1.077em;*/
+}
+.user-links, .user-links a {
+	line-height: 31px;
+}
+
+
+ul.linklist {
+	display: block;
+	margin: 0;
+}
+
+ul.linklist li {
+	display: block;
+	list-style-type: none;
+	float: left;
+	width: auto;
+	margin-right: 5px;
+	line-height: 2.2em;
+}
+
+ul.linklist li.rightside, p.rightside {
+	float: right;
+	margin-right: 0;
+	margin-left: 5px;
+	text-align: right;
+}
+
+ul.navlinks {
+	padding-bottom: 1px;
+	margin-bottom: 1px;
+	border-bottom: 1px solid #FFFFFF;
+	font-weight: bold;
+}
+
+ul.leftside {
+	float: left;
+	margin-left: 0;
+	margin-right: 5px;
+	text-align: left;
+}
+
+ul.rightside {
+	float: right;
+	margin-left: 5px;
+	margin-right: -5px;
+	text-align: right;
+}
+.thread-icons {
+	margin: 0px;
+	padding: 0px;
+	list-style-type: none;
+	float: right;
+}
+.thread-icons li {
+	float: left;
+}
+
+/* Table styles
+----------------------------------------*/
+table.table1 {
+	/* See tweaks.css */
+}
+
+#ucp-main table.table1 {
+	padding: 2px;
+}
+
+table.table1 thead th {
+	font-weight: normal;
+	color: #FFFFFF;
+	line-height: 1.3em;
+}
+
+table.table1 thead th span {
+	padding-left: 7px;
+}
+
+table.table1 tbody tr {
+	border: 1px solid #E4E4E4;
+}
+
+table.table1 tbody tr:hover, table.table1 tbody tr.hover {
+	background-color: #f6f6f6;
+	color: #000;
+}
+
+table.table1 td {
+	color: #6a6a6a;
+}
+
+table.table1 tbody td {
+	padding: 5px;
+	border-top: 1px solid #E4E4E4;
+}
+
+table.table1 tbody th {
+	padding: 5px;
+	border-bottom: 1px solid #E4E4E4;
+	text-align: left;
+	color: #333333;
+	background-color: #FFFFFF;
+}
+
+/* Specific column styles */
+table.table1 .name		{ text-align: left; }
+table.table1 .posts		{ text-align: center !important; width: 7%; }
+table.table1 .joined	{ text-align: left; width: 15%; }
+table.table1 .active	{ text-align: left; width: 15%; }
+table.table1 .mark		{ text-align: center; width: 7%; }
+table.table1 .info		{ text-align: left; width: 30%; }
+table.table1 .info div	{ width: 100%; white-space: normal; overflow: hidden; }
+table.table1 .autocol	{ line-height: 2em; white-space: nowrap; }
+table.table1 thead .autocol { padding-left: 1em; }
+
+table.table1 span.rank-img {
+	float: right;
+	width: auto;
+}
+
+table.info td {
+	padding: 3px;
+}
+
+table.info tbody th {
+	padding: 3px;
+	text-align: right;
+	vertical-align: top;
+	color: #000000;
+	font-weight: normal;
+}
+
+.forumbg table.table1 {
+	margin: 0;
+}
+
+.forumbg-table > .inner {
+	margin: 0 -1px;
+}
+
+
+/* Misc layout styles
+---------------------------------------- */
+/* column[1-2] styles are containers for two column layouts 
+   Also see tweaks.css */
+.column1 {
+	float: left;
+	clear: left;
+	width: 49%;
+}
+
+.column2 {
+	float: right;
+	clear: right;
+	width: 49%;
+}
+
+/* General classes for placing floating blocks */
+.left-box {
+	float: left;
+	width: auto;
+	text-align: left;
+}
+
+.right-box {
+	float: right;
+	width: auto;
+	text-align: right;
+}
+
+dl.details {
+	/*font-size: 1.1em;*/
+}
+
+dl.details dt {
+	float: left;
+	clear: left;
+	width: 30%;
+	text-align: right;
+	color: #000000;
+	display: block;
+}
+
+dl.details dd {
+	margin-left: 0;
+	padding-left: 5px;
+	margin-bottom: 5px;
+	float: left;
+	width: 65%;
+}
+
+.dark-header {
+	background-color: #2E392F;
+	line-height: 48px;
+	padding: 0 12px;
+	color: #ffffff;
+	font-weight: normal;
+	clear: both;
+}
+.dark-header a {
+	color: #ffffff !important;
+}
+.dark-header-content {
+	background-color: #ffffff;
+	padding: 12px;
+    border-bottom: 1px solid #E4E4E4;
+    border-left: 1px solid #E4E4E4;
+    border-right: 1px solid #E4E4E4;
+	margin-bottom: 12px;
+}
+/* Pagination
+---------------------------------------- */
+.pagination {
+	height: 1%; /* IE tweak (holly hack) */
+	width: auto;
+	text-align: right;
+	margin-top: 5px;
+	float: right;
+}
+
+.pagination span.page-sep {
+	display: none;
+}
+
+li.pagination {
+	margin-top: 0;
+}
+
+.pagination strong, .pagination b {
+	font-weight: normal;
+}
+
+.pagination span strong {
+	padding: 2px 6px;
+	margin: 0 1px;
+	font-weight: normal;
+	color: #FFFFFF;
+	background-color: #bfbfbf;
+	border: 1px solid #bfbfbf;
+	font-size: 0.9em;
+}
+
+.pagination span a, .pagination span a:link, .pagination span a:visited, .pagination span a:active {
+	font-weight: normal;
+	text-decoration: none;
+	color: #747474;
+	margin: 0 1px;
+	padding: 2px 6px;
+	background-color: #eeeeee;
+	border: 1px solid #bababa;
+	font-size: 0.9em;
+	line-height: 1.5em;
+}
+
+.pagination span a:hover {
+	border-color: #d2d2d2;
+	background-color: #d2d2d2;
+	color: #FFF;
+	text-decoration: none;
+}
+
+.pagination img {
+	vertical-align: middle;
+}
+
+/* Pagination in viewforum for multipage topics */
+.row .pagination {
+	display: block;
+	float: right;
+	width: auto;
+	margin-top: 0;
+	padding: 1px 0 1px 15px;
+	font-size: 0.9em;
+	background: none 0 50% no-repeat;
+}
+
+.row .pagination span a, li.pagination span a {
+	background-color: #FFFFFF;
+}
+
+.row .pagination span a:hover, li.pagination span a:hover {
+	background-color: #d2d2d2;
+}
+
+/* Miscellaneous styles
+---------------------------------------- */
+#forum-permissions {
+	float: right;
+	width: auto;
+	padding-left: 5px;
+	margin-left: 5px;
+	margin-top: 10px;
+	text-align: right;
+}
+
+.copyright {
+	padding: 5px;
+	text-align: center;
+	color: #555555;
+}
+
+.small {
+	font-size: 0.9em !important;
+}
+
+.titlespace {
+	margin-bottom: 15px;
+}
+
+.headerspace {
+	margin-top: 12px;
+}
+
+.error {
+	color: #bcbcbc;
+	font-weight: bold;
+	font-size: 1em;
+}
+
+.reported {
+	background-color: #f7f7f7;
+}
+
+li.reported:hover {
+	background-color: #ececec;
+}
+.reported + .reported {
+    border-top: none !important;
+}
+div.rules {
+	padding: 12px;
+	margin: 12px 0;
+}
+
+div.rules ul, div.rules ol {
+	margin-left: 20px;
+}
+
+p.rules {
+	background-color: #ececec;
+	background-image: none;
+	padding: 5px;
+}
+
+p.rules img {
+	vertical-align: middle;
+}
+
+p.rules a {
+	vertical-align: middle;
+	clear: both;
+}
+.rules-header {
+	font-size: 1.231em;
+	display: block;
+	font-weight: 600;
+	margin-bottom: 6px;
+}
+.rules-header a {
+	font-weight: 600;
+	text-decoration: underline !important;
+}
+.rules-header a:hover {
+	text-decoration: none !important;
+}
+#top {
+	position: absolute;
+	top: -20px;
+}
+
+.clear {
+	display: block;
+	clear: both;
+	font-size: 1px;
+	line-height: 1px;
+	background: transparent;
+}
+
+/* Animation
+---------------------------------------- */
+
+#header .tabs li a,
+.topiclist.forums .row, .topiclist.topics .row,
+.button1, .button2,
+.inputbox,
+#tabs li span,
+#cp-menu #navigation li a,
+table.table1 tbody tr:hover, table.table1 tbody tr.hover {
+	-webkit-transition: all 0.3s ease 0s;
+	-moz-transition: all 0.3s ease 0s;
+	-ms-transition: all 0.3s ease 0s;
+	-o-transition: all 0.3s ease 0s;
+	transition: all 0.3s ease 0s;
+}
+.search-box .button2 {
+	transition: none;
+	-webkit-transition: none;
+	-moz-transition: none;
+	-ms-transition: none;
+	-o-transition: none;
+}
+
+
+
+/* Popup Login
+---------------------------------------- */
+
+#mask {
+	display: none;
+	background: #000; 
+	position: fixed; left: 0; top: 0; 
+	z-index: 10;
+	width: 100%; height: 100%;
+	opacity: 0.6;
+	z-index: 999;
+}
+
+.login-popup {
+	display:none;
+	width: 364px;
+	background: #fff;
+	padding: 16px 0; 	
+	float: left;
+	font-size: 1.2em;
+	position: fixed;
+	top: 50%; left: 50%;
+	z-index: 99999;
+	box-shadow: 0px 0px 20px #434343; /* CSS3 */
+	-moz-box-shadow: 0px 0px 20px #434343; /* Firefox */
+	-webkit-box-shadow: 0px 0px 20px #434343; /* Safari, Chrome */
+}
+#navbar_username,
+#navbar_password_hint,
+#navbar_password {
+	width: 254px;
+	padding: 0 12px 0 32px;
+	border: solid 1px #ebebeb;
+	height: 40px;
+	line-height: 40px;
+	background-attachment: scroll;
+	background-image: url("{T_THEME_PATH}/images/login-icons.png") !important;
+	background-repeat: no-repeat;
+	background-color: #FFF;
+	outline: none !important;
+	font-size: 11px;
+}
+#navbar_username {
+	background-position: 12px 0;
+}
+
+#navbar_password_hint,
+#navbar_password {
+	background-position: 12px -40px;
+}
+.navbar_username_outer,
+.navbar_password_outer {
+	padding: 12px 32px;
+}
+.navbar_username_outer label,
+.navbar_password_outer label {
+	font-size: 11px;
+}
+.navbar_username_outer.active,
+.navbar_password_outer.active {
+	padding: 12px 32px 12px 26px;
+	background-color: #f2f2f2;
+	border-left: solid 6px #82BA1B;
+	-webkit-box-sizing: border-box;
+	   -moz-box-sizing: border-box;
+	        box-sizing: border-box;
+}
+.quick-login {
+	border-bottom: solid 1px #ebebeb;
+	margin-bottom: 12px;
+}
+.login-buttons {
+	padding: 12px 32px;
+}
+#autologin_label {
+	font-size: 11px;
+	cursor: pointer;
+	float: right;
+}
+#login-box .register-link {
+	padding: 12px 32px;	
+}
+
+img.close-button { 
+	float: right; 
+	margin: -10px 6px 0 0;
+}
+#login-text {
+	font: 24px 'Open Sans',sans-serif;
+	color: #82BA1B;
+	text-transform: lowercase;
+	padding: 0 32px;
+	margin-bottom: 12px;
+}
+.login-popup fieldset { 
+	border:none; 
+}
+.login-link {
+	display: none;
+}
+
+/* Sidebar blocks
+---------------------------------------- */
+
+#sidebar {
+	float: left;
+	width: 252px;
+	margin-bottom: 12px;
+}
+#page-body-inner {
+	float: left;
+	width: 916px;
+	margin-right: 12px;
+}
+.no-sidebar#page-body-inner {
+	width: 100%;
+	margin-right: 0;
+}
+#sidebar + #page-body-inner .forabg,
+#sidebar + #page-body-inner .dark-header {
+	clear: none;
+}
+.sidebar-block {
+	margin-bottom: 12px;
+}
+.sidebar-block:last-child {
+	margin-bottom: 0;
+}
+.sidebar-block-header {
+	background-color: #2E392F;
+    color: #FFFFFF;
+    font-size: 14px;
+    font-weight: normal;
+    padding: 14px 12px;
+    letter-spacing: 0;
+    margin: 0;
+}
+.sidebar-block-content {
+    background: #FFFFFF;
+    border: solid 1px #E4E4E4;
+    color: #424242;
+    padding: 16px 12px;
+}
+#sidebar ul {
+	list-style-position: inside;
+	margin-bottom: 1.5em;
+}
+
+
+
+
+/* Prefooter blocks
+---------------------------------------- */
+
+.prefooter-blocks {
+	margin-bottom: 12px;
+	overflow: hidden;
+	clear: both;
+}
+.prefooter-blocks h2 {
+	color: #FFF;
+    font-size: 32px;
+    font-weight: 300;
+    margin-bottom: 6px;
+    margin-top: 0;
+    text-transform: lowercase;
+    line-height: 1.23;
+}
+.prefooter-blocks h2, .prefooter-blocks h3, .prefooter-blocks h4 {
+	color: #FFF;
+}
+#container1 {
+	width: 100%;
+	float: left;
+	background-color: #2E392F;
+	position: relative;
+	right: 12px;
+}
+#container2 {
+	width: 100%;
+	float: left;	
+	background-color: #F6F6F6;
+	position: relative;
+	right: 252px;
+}
+#container3 {
+	width: 100%;
+	float: left;
+	background-color: #82BA1B;
+	overflow: hidden;
+}
+#col1 {
+    float: left;
+    left: 264px;
+    margin-right: -264px;
+    padding-right: 276px !important;
+    position: relative;
+    width: 100%;
+}
+#col2 {
+	width: 252px;
+	float: right;
+	position: relative;
+	left: 264px;
+}
+#col1, #col2 {
+	-webkit-box-sizing: border-box;
+	   -moz-box-sizing: border-box;
+	        box-sizing: border-box;
+	padding: 24px 12px;
+	color: #FFF;
+}
+
+.prefooter-block-01 {
+	float: left;
+	width: 70%;
+	padding-right: 12px;
+}
+.prefooter-block-01.single {
+	width: auto;
+	padding-right: 0;
+}
+.prefooter-block-01 p {
+	margin-bottom: 1em;
+	line-height: 1.3em;
+}
+.about-block p:last-child {
+	margin-bottom: 0;
+}
+.prefooter-block-02 {
+	float: left;
+	width: 30%;
+}
+.prefooter-block-02 li {
+	line-height: 1.3em;
+	margin-bottom: 6px;
+}
+.prefooter-right {
+	float: right;
+	width: 244px;
+}
+.prefooter-block-03 {
+	margin-bottom: 24px;
+	overflow: hidden;
+}
+.social-icons ul li {
+	float: left;
+	margin-right: 6px;
+	list-style-type: none;
+}
+.social-icons ul li a {
+	display: block;
+	width: 37px;
+	height: 37px;
+	background-image: url("{T_THEME_PATH}/images/social-icons.png");
+	background-attachment: scroll;
+	background-repeat: no-repeat;
+
+}
+.social-icons ul li a.twitter {
+	background-position: -76px top;
+}
+.social-icons ul li a.twitter:hover {
+	background-position: -76px -37px;
+}
+.social-icons ul li a.facebook {
+	background-position: -38px top;
+}
+.social-icons ul li a.facebook:hover {
+	background-position: -38px -37px;
+}
+.social-icons ul li a.youtube {
+	background-position: -152px top;
+}
+.social-icons ul li a.youtube:hover {
+	background-position: -152px -37px;
+}
+.social-icons ul li a.gplus {
+	background-position: 0 top;
+}
+.social-icons ul li a.gplus:hover {
+	background-position: 0 -37px;
+}
+.social-icons ul li a.myspace {
+	background-position: -114px top;
+}
+.social-icons ul li a.myspace:hover {
+	background-position: -114px -37px;
+}
+.prefooter-block-04 a {
+	color: #ffffff;
+	text-decoration: underline;
+}
+.prefooter-block-04 a:hover {
+	color: #ffffff;
+	text-decoration: none;
+}
+#footer_divider {
+	border-bottom: 1px solid #E4E4E4;
+	clear: both;
+	padding-top: 48px;
+}	
+
+a.toggleMenuButton {
+    background-image: url("{T_THEME_PATH}/images/toggleMenubg.png");
+    background-attachment: scroll;
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+#subheader-menu li {
+    background-image: url("{T_THEME_PATH}/images/submenu-icons.png");
+    background-attachment: scroll;
+    background-repeat: no-repeat;
+}
