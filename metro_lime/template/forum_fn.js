@@ -323,88 +323,637 @@ function insert_single_user(formId, user) {
 }
 
 /**
-* Usually used for onkeypress event, to submit a form on enter
+* Parse document block
 */
-function submit_default_button(event, selector, class_name)
-{
-	// Add which for key events
-	if (!event.which && ((event.charCode || event.charCode === 0) ? event.charCode : event.keyCode))
-		event.which = event.charCode || event.keyCode;
+function parseDocument($container) {
+	'use strict';
 
-	if (phpbb_check_key(event))
-		return true;
+	var test = document.createElement('div'),
+		oldBrowser = (typeof test.style.borderRadius == 'undefined'),
+		$body = $('body');
 
-	var current = selector['parentNode'];
+	/**
+	* Reset avatar dimensions when changing URL or EMAIL
+	*/
+	$container.find('input[data-reset-on-edit]').on('keyup', function() {
+		$(this.getAttribute('data-reset-on-edit')).val('');
+	});
 
-	// Search parent form element
-	while (current && (!current.nodeName || current.nodeType != 1 || !is_node_name(current, 'form')) && current != document)
-		current = current['parentNode'];
+	/**
+	* Pagination
+	*/
+	$container.find('.pagination .page-jump-form :button').click(function() {
+		var $input = $(this).siblings('input.inputbox');
+		pageJump($input);
+	});
 
-	// Find the input submit button with the class name
-	//current = find_in_tree(current, 'input', 'submit', class_name);
-	var input_tags = current.getElementsByTagName('input');
-	current = false;
+	$container.find('.pagination .page-jump-form input.inputbox').on('keypress', function(event) {
+		if (event.which === 13 || event.keyCode === 13) {
+			event.preventDefault();
+			pageJump($(this));
+		}
+	});
 
-	for (var i = 0, element = input_tags[0]; i < input_tags.length; element = input_tags[++i])
-	{
-		if (element.type == 'submit' && is_in_array(class_name, (element.className || element).toString().split(/\s+/)) > -1)
-			current = element;
+	$container.find('.pagination .dropdown-trigger').click(function() {
+		var $dropdownContainer = $(this).parent();
+		// Wait a little bit to make sure the dropdown has activated
+		setTimeout(function() {
+			if ($dropdownContainer.hasClass('dropdown-visible')) {
+				$dropdownContainer.find('input.inputbox').focus();
+			}
+		}, 100);
+	});
+
+	/**
+	* Adjust HTML code for IE8 and older versions
+	*/
+	if (oldBrowser) {
+		// Fix .linklist.bulletin lists
+		$container.find('ul.linklist.bulletin > li:first-child, ul.linklist.bulletin > li.rightside:last-child').addClass('no-bulletin');
 	}
+	
+	/**
+	* Resize navigation (breadcrumbs) block to keep all links on same line
+	*/
+	$container.find('.navlinks').each(function() {
+		var $this = $(this),
+			$left = $this.children().not('.rightside'),
+			$right = $this.children('.rightside');
+ 
+		if ($left.length !== 1 || !$right.length) {
+			return;
+		}
 
-	if (!current)
-		return true;
+		function resize() {
+			var width = 0,
+				diff = $left.outerWidth(true) - $left.width(),
+				minWidth = Math.max($this.width() / 3, 240),
+				maxWidth;
 
-	// Submit form
-	current.focus();
-	current.click();
-	return false;
-}
+			$right.each(function() {
+				var $this = $(this);
+				if ($this.is(':visible')) {
+					width += $this.outerWidth(true);
+				}
+			});
 
-/**
-* Apply onkeypress event for forcing default submit button on ENTER key press
-* The jQuery snippet used is based on http://greatwebguy.com/programming/dom/default-html-button-submit-on-enter-with-jquery/
-* The non-jQuery code is a mimick of the jQuery code ;)
-*/
-function apply_onkeypress_event()
-{
-	// jQuery code in case jQuery is used
-	if (jquery_present)
-	{
-		jQuery('form input[type=text], form input[type=password]').live('keypress', function (e)
-		{
-			var default_button = jQuery(this).parents('form').find('input[type=submit].default-submit-action');
-			
-			if (!default_button || default_button.length <= 0)
-				return true;
+			maxWidth = $this.width() - width - diff;
+			$left.css('max-width', Math.floor(Math.max(maxWidth, minWidth)) + 'px');
+		}
 
-			if (phpbb_check_key(e))
-				return true;
+		resize();
+		$(window).resize(resize);
+	});
 
-			if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13))
-			{
-				default_button.click();
-				return false;
+	/**
+	* Makes breadcrumbs responsive
+	*/
+	$container.find('.breadcrumbs:not([data-skip-responsive])').each(function() {
+		var $this = $(this),
+			$links = $this.find('.crumb'),
+			length = $links.length,
+			classes = ['wrapped-max', 'wrapped-wide', 'wrapped-medium', 'wrapped-small', 'wrapped-tiny'],
+			classesLength = classes.length,
+			maxHeight = 0,
+			lastWidth = false,
+			wrapped = false;
+
+		// Set tooltips
+		$this.find('a').each(function() {
+			var $link = $(this);
+			$link.attr('title', $link.text());
+		});
+
+		// Function that checks breadcrumbs
+		function check() {
+			var height = $this.height(),
+				width;
+
+			// Test max-width set in code for .navlinks above
+			width = parseInt($this.css('max-width'));
+			if (!width) {
+ 				width = $body.width();
+ 			}
+
+			maxHeight = parseInt($this.css('line-height'));
+			$links.each(function() {
+				if ($(this).height() > 0) {
+					maxHeight = Math.max(maxHeight, $(this).outerHeight(true));
+				}
+			});
+
+			if (height <= maxHeight) {
+				if (!wrapped || lastWidth === false || lastWidth >= width) {
+					return;
+				}
+			}
+			lastWidth = width;
+
+			if (wrapped) {
+				$this.removeClass('wrapped').find('.crumb.wrapped').removeClass('wrapped ' + classes.join(' '));
+				if ($this.height() <= maxHeight) {
+					return;
+				}
 			}
 
-			return true;
+			wrapped = true;
+			$this.addClass('wrapped');
+			if ($this.height() <= maxHeight) {
+				return;
+			}
+
+			for (var i = 0; i < classesLength; i ++) {
+				for (var j = length - 1; j >= 0; j --) {
+					$links.eq(j).addClass('wrapped ' + classes[i]);
+					if ($this.height() <= maxHeight) {
+						return;
+					}
+				}
+			}
+		}
+
+		// Run function and set event
+		check();
+		$(window).resize(check);
+	});
+
+	/**
+	* Responsive link lists
+	*/
+	$container.find('.linklist:not(.navlinks, [data-skip-responsive]), .postbody .post-buttons:not([data-skip-responsive])').each(function() {
+		var $this = $(this),
+			filterSkip = '.breadcrumbs, [data-skip-responsive]',
+			filterLast = '.edit-icon, .quote-icon, [data-last-responsive]',
+			$linksAll = $this.children(),
+			$linksNotSkip = $linksAll.not(filterSkip), // All items that can potentially be hidden
+			$linksFirst = $linksNotSkip.not(filterLast), // The items that will be hidden first
+			$linksLast = $linksNotSkip.filter(filterLast), // The items that will be hidden last
+			persistent = $this.attr('id') == 'nav-main', // Does this list already have a menu (such as quick-links)?
+			html = '<li class="responsive-menu hidden"><a href="javascript:void(0);" class="responsive-menu-link">&nbsp;</a><div class="dropdown hidden"><div class="pointer"><div class="pointer-inner" /></div><ul class="dropdown-contents" /></div></li>',
+			slack = 3; // Vertical slack space (in pixels). Determines how sensitive the script is in determining whether a line-break has occured.
+
+		// Add a hidden drop-down menu to each links list (except those that already have one)
+		if (!persistent) {
+			if ($linksNotSkip.is('.rightside')) {
+				$linksNotSkip.filter('.rightside:first').before(html);
+				$this.children('.responsive-menu').addClass('rightside');
+			} else {
+				$this.append(html);
+			}
+		}
+
+		// Set some object references and initial states
+		var $menu = $this.children('.responsive-menu'),
+			$menuContents = $menu.find('.dropdown-contents'),
+			persistentContent = $menuContents.find('li:not(.separator)').length,
+			lastWidth = false,
+			compact = false,
+			responsive1 = false,
+			responsive2 = false,
+			copied1 = false,
+			copied2 = false,
+			maxHeight = 0;
+
+		// Find the tallest element in the list (we assume that all elements are roughly the same height)
+		$linksAll.each(function() {
+			if (!$(this).height()) {
+				return;
+			}
+			maxHeight = Math.max(maxHeight, $(this).outerHeight(true));
 		});
-	
+		if (maxHeight < 1) {
+			return; // Shouldn't be possible, but just in case, abort
+		} else {
+			maxHeight = maxHeight + slack;
+		}
+
+		function check() {
+			var width = $body.width();
+			// We can't make it any smaller than this, so just skip
+			if (responsive2 && compact && (width <= lastWidth)) {
+				return;
+			}
+			lastWidth = width;
+
+			// Reset responsive and compact layout
+			if (responsive1 || responsive2) {
+				$linksNotSkip.removeClass('hidden');
+				$menuContents.children('.clone').addClass('hidden');
+				responsive1 = responsive2 = false;
+			}
+			if (compact) {
+				$this.removeClass('compact');
+				compact = false;
+			}
+
+			// Unhide the quick-links menu if it has "persistent" content
+			if (persistent && persistentContent) {
+				$menu.removeClass('hidden');
+			} else {
+				$menu.addClass('hidden');
+			}
+
+			// Nothing to resize if block's height is not bigger than tallest element's height
+			if ($this.height() <= maxHeight) {
+				return;
+			}
+
+			// STEP 1: Compact
+			if (!compact) {
+				$this.addClass('compact');
+				compact = true;
+			}
+			if ($this.height() <= maxHeight) {
+				return;
+			}
+
+			// STEP 2: First responsive set - compact
+			if (compact) {
+				$this.removeClass('compact');
+				compact = false;
+			}
+			// Copy the list items to the dropdown
+			if (!copied1) {
+				var $clones1 = $linksFirst.clone();
+				$menuContents.prepend($clones1.addClass('clone clone-first').removeClass('leftside rightside'));
+
+				if ($this.hasClass('post-buttons')) {
+					$('.button', $menuContents).removeClass('button icon-button');
+					$('.responsive-menu-link', $menu).addClass('button icon-button').prepend('<span></span>');
+				}
+				copied1 = true;
+			}
+			if (!responsive1) {
+				$linksFirst.addClass('hidden');
+				responsive1 = true;
+				$menuContents.children('.clone-first').removeClass('hidden');
+				$menu.removeClass('hidden');
+			}
+			if ($this.height() <= maxHeight) {
+				return;
+			}
+
+			// STEP 3: First responsive set + compact
+			if (!compact) {
+				$this.addClass('compact');
+				compact = true;
+			}
+			if ($this.height() <= maxHeight) {
+				return;
+			}
+
+			// STEP 4: Last responsive set - compact
+			if (!$linksLast.length) {
+				return; // No other links to hide, can't do more
+			}
+			if (compact) {
+				$this.removeClass('compact');
+				compact = false;
+			}
+			// Copy the list items to the dropdown
+			if (!copied2) {
+				var $clones2 = $linksLast.clone();
+				$menuContents.prepend($clones2.addClass('clone clone-last').removeClass('leftside rightside'));
+				copied2 = true;
+			}
+			if (!responsive2) {
+				$linksLast.addClass('hidden');
+				responsive2 = true;
+				$menuContents.children('.clone-last').removeClass('hidden');
+			}
+			if ($this.height() <= maxHeight) {
+				return;
+			}
+
+			// STEP 5: Last responsive set + compact
+			if (!compact) {
+				$this.addClass('compact');
+				compact = true;
+			}
+		}
+
+		if (!persistent) {
+			phpbb.registerDropdown($menu.find('a.responsive-menu-link'), $menu.find('.dropdown'), false);
+		}
+
+		// If there are any images in the links list, run the check again after they have loaded
+		$linksAll.find('img').each(function() {
+			$(this).load(function() {
+				check();
+			});
+		});
+
+		check();
+		$(window).resize(check);
+	});
+
+	/**
+	* Do not run functions below for old browsers
+	*/
+	if (oldBrowser) {
 		return;
 	}
 
-	var input_tags = document.getElementsByTagName('input');
+	/**
+	* Adjust topiclist lists with check boxes
+	*/
+	$container.find('ul.topiclist dd.mark').siblings('dt').children('.list-inner').addClass('with-mark');
 
-	for (var i = 0, element = input_tags[0]; i < input_tags.length ; element = input_tags[++i])
-	{
-		if (element.type == 'text' || element.type == 'password')
-		{
-			// onkeydown is possible too
-			element.onkeypress = function (evt) { submit_default_button((evt || window.event), this, 'default-submit-action'); };
+	/**
+	* Appends contents of all extra columns to first column in
+	* .topiclist lists for mobile devices. Copies contents as is.
+	*
+	* To add that functionality to .topiclist list simply add
+	* responsive-show-all to list of classes
+	*/
+	$container.find('.topiclist.responsive-show-all > li > dl').each(function() {
+		var $this = $(this),
+			$block = $this.find('dt .responsive-show:last-child'),
+			first = true;
+
+		// Create block that is visible only on mobile devices
+		if (!$block.length) {
+			$this.find('dt > .list-inner').append('<div class="responsive-show" style="display:none;" />');
+			$block = $this.find('dt .responsive-show:last-child');
+		} else {
+			first = ($.trim($block.text()).length === 0);
 		}
-	}
+
+		// Copy contents of each column
+		$this.find('dd').not('.mark').each(function() {
+			var column = $(this),
+				$children = column.children(),
+				html = column.html();
+
+			if ($children.length == 1 && $children.text() == column.text()) {
+				html = $children.html();
+			}
+
+			$block.append((first ? '' : '<br />') + html);
+
+			first = false;
+		});
+	});
+
+	/**
+	* Same as above, but prepends text from header to each
+	* column before contents of that column.
+	*
+	* To add that functionality to .topiclist list simply add
+	* responsive-show-columns to list of classes
+	*/
+	$container.find('.topiclist.responsive-show-columns').each(function() {
+		var $list = $(this),
+			headers = [],
+			headersLength = 0;
+
+		// Find all headers, get contents
+		$list.prev('.topiclist').find('li.header dd').not('.mark').each(function() {
+			headers.push($(this).text());
+			headersLength++;
+		});
+
+		if (!headersLength) {
+			return;	
+		}
+
+		// Parse each row
+		$list.find('dl').each(function() {
+			var $this = $(this),
+				$block = $this.find('dt .responsive-show:last-child'),
+				first = true;
+
+			// Create block that is visible only on mobile devices
+			if (!$block.length) {
+				$this.find('dt > .list-inner').append('<div class="responsive-show" style="display:none;" />');
+				$block = $this.find('dt .responsive-show:last-child');
+			}
+			else {
+				first = ($.trim($block.text()).length === 0);
+			}
+
+			// Copy contents of each column
+			$this.find('dd').not('.mark').each(function(i) {
+				var column = $(this),
+					children = column.children(),
+					html = column.html();
+
+				if (children.length == 1 && children.text() == column.text()) {
+					html = children.html();
+				}
+
+				// Prepend contents of matching header before contents of column
+				if (i < headersLength) {
+					html = headers[i] + ': <strong>' + html + '</strong>';
+				}
+
+				$block.append((first ? '' : '<br />') + html);
+
+				first = false;
+			});
+		});
+	});
+
+	/**
+	* Responsive tables
+	*/
+	$container.find('table.table1').not('.not-responsive').each(function() {
+		var $this = $(this),
+			$th = $this.find('thead > tr > th'),
+			headers = [],
+			totalHeaders = 0,
+			i, headersLength;
+
+		// Find each header
+		$th.each(function(column) {
+			var cell = $(this),
+				colspan = parseInt(cell.attr('colspan')),
+				dfn = cell.attr('data-dfn'),
+				text = dfn ? dfn : cell.text();
+
+			colspan = isNaN(colspan) || colspan < 1 ? 1 : colspan;
+
+			for (i = 0; i < colspan; i++) {
+				headers.push(text);
+			}
+			totalHeaders++;
+
+			if (dfn && !column) {
+				$this.addClass('show-header');
+			}
+		});
+
+		headersLength = headers.length;
+
+		// Add header text to each cell as <dfn>
+		$this.addClass('responsive');
+
+		if (totalHeaders < 2) {
+			$this.addClass('show-header');
+			return;
+		}
+
+		$this.find('tbody > tr').each(function() {
+			var row = $(this),
+				cells = row.children('td'),
+				column = 0;
+
+			if (cells.length == 1) {
+				row.addClass('big-column');
+				return;
+			}
+
+			cells.each(function() {
+				var cell = $(this),
+					colspan = parseInt(cell.attr('colspan')),
+					text = $.trim(cell.text());
+
+				if (headersLength <= column) {
+					return;
+				}
+
+				if ((text.length && text !== '-') || cell.children().length) {
+					cell.prepend('<dfn style="display: none;">' + headers[column] + '</dfn>');
+				} else {
+					cell.addClass('empty');
+				}
+
+				colspan = isNaN(colspan) || colspan < 1 ? 1 : colspan;
+				column += colspan;
+			});
+		});
+	});
+
+	/**
+	* Hide empty responsive tables
+	*/
+	$container.find('table.responsive > tbody').not('.responsive-skip-empty').each(function() {
+		var $items = $(this).children('tr');
+		if (!$items.length) {
+			$(this).parent('table:first').addClass('responsive-hide');
+		}
+	});
+
+	/**
+	* Responsive tabs
+	*/
+	$container.find('#tabs, #minitabs').not('[data-skip-responsive]').each(function() {
+		var $this = $(this),
+			$ul = $this.children(),
+			$tabs = $ul.children().not('[data-skip-responsive]'),
+			$links = $tabs.children('a'),
+			$item = $ul.append('<li class="tab responsive-tab" style="display:none;"><a href="javascript:void(0);" class="responsive-tab-link">&nbsp;</a><div class="dropdown tab-dropdown" style="display: none;"><div class="pointer"><div class="pointer-inner" /></div><ul class="dropdown-contents" /></div></li>').find('li.responsive-tab'),
+			$menu = $item.find('.dropdown-contents'),
+			maxHeight = 0,
+			lastWidth = false,
+			responsive = false;
+
+		$links.each(function() {
+			var $this = $(this);
+			maxHeight = Math.max(maxHeight, Math.max($this.outerHeight(true), $this.parent().outerHeight(true)));
+		});
+
+		function check() {
+			var width = $body.width(),
+				height = $this.height();
+
+			if (!arguments.length && (!responsive || width <= lastWidth) && height <= maxHeight) {
+				return;
+			}
+
+			$tabs.show();
+			$item.hide();
+
+			lastWidth = width;
+			height = $this.height();
+			if (height <= maxHeight) {
+				if ($item.hasClass('dropdown-visible')) {
+					phpbb.toggleDropdown.call($item.find('a.responsive-tab-link').get(0));
+				}
+				return;
+			}
+
+			responsive = true;
+			$item.show();
+			$menu.html('');
+
+			var $availableTabs = $tabs.filter(':not(.activetab, .responsive-tab)'),
+				total = $availableTabs.length,
+				i, $tab;
+
+			for (i = total - 1; i >= 0; i --) {
+				$tab = $availableTabs.eq(i);
+				$menu.prepend($tab.clone(true).removeClass('tab'));
+				$tab.hide();
+				if ($this.height() <= maxHeight) {
+					$menu.find('a').click(function() { check(true); });
+					return;
+				}
+			}
+			$menu.find('a').click(function() { check(true); });
+		}
+
+		phpbb.registerDropdown($item.find('a.responsive-tab-link'), $item.find('.dropdown'), {visibleClass: 'activetab'});
+
+		check(true);
+		$(window).resize(check);
+	});
+
+	/**
+	 * Hide UCP/MCP navigation if there is only 1 item
+	 */
+	$container.find('#navigation').each(function() {
+		var $items = $(this).children('ol, ul').children('li');
+		if ($items.length === 1) {
+			$(this).addClass('responsive-hide');
+		}
+	});
+
+	/**
+	* Replace responsive text
+	*/
+	$container.find('[data-responsive-text]').each(function() {
+		var $this = $(this),
+			fullText = $this.text(),
+			responsiveText = $this.attr('data-responsive-text'),
+			responsive = false;
+
+		function check() {
+			if ($(window).width() > 700) {
+				if (!responsive) {
+					return;
+				}
+				$this.text(fullText);
+				responsive = false;
+				return;
+			}
+			if (responsive) {
+				return;
+			}
+			$this.text(responsiveText);
+			responsive = true;
+		}
+
+		check();
+		$(window).resize(check);
+	});
 }
 
 /**
-* Detect JQuery existance. We currently do not deliver it, but some styles do, so why not benefit from it. ;)
+* Run onload functions
 */
-var jquery_present = typeof jQuery == 'function';
+jQuery(function($) {
+	'use strict';
+
+	// Swap .nojs and .hasjs
+	$('#phpbb.nojs').toggleClass('nojs hasjs');
+	$('#phpbb').toggleClass('hastouch', phpbb.isTouch);
+	$('#phpbb.hastouch').removeClass('notouch');
+
+	// Focus forms
+	$('form[data-focus]:first').each(function() {
+		$('#' + this.getAttribute('data-focus')).focus();
+	});
+
+	parseDocument($('body'));
+});
