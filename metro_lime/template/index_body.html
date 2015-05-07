@@ -1,29 +1,50 @@
 <!-- INCLUDE overall_header.html -->
 
 <div id="page-body-inner" class="no-sidebar">
-
+	
+<!-- EVENT index_body_markforums_after -->
 <!-- INCLUDE forumlist_body.html -->
+<!-- EVENT index_body_forumlist_body_after -->
 
-
+<!-- EVENT index_body_stat_blocks_before -->
 <!-- IF S_DISPLAY_ONLINE_LIST -->
-	<!-- IF U_VIEWONLINE --><h3 class="dark-header"><a href="{U_VIEWONLINE}">{L_WHO_IS_ONLINE}</a></h3><!-- ELSE --><h3 class="dark-header">{L_WHO_IS_ONLINE}</h3><!-- ENDIF -->
-	<div class="dark-header-content">{TOTAL_USERS_ONLINE} ({L_ONLINE_EXPLAIN})<br />{RECORD_USERS}<br /> <br />{LOGGED_IN_USER_LIST}
-	<!-- IF LEGEND --><br /><em>{L_LEGEND}: {LEGEND}</em><!-- ENDIF --></div>
+	<div class="stat-block online-list">
+		<!-- IF U_VIEWONLINE --><h3><a href="{U_VIEWONLINE}">{L_WHO_IS_ONLINE}</a></h3><!-- ELSE --><h3>{L_WHO_IS_ONLINE}</h3><!-- ENDIF -->
+		<p>
+			<!-- EVENT index_body_block_online_prepend -->
+			{TOTAL_USERS_ONLINE} ({L_ONLINE_EXPLAIN})<br />{RECORD_USERS}<br /> <br />{LOGGED_IN_USER_LIST}
+			<!-- IF LEGEND --><br /><em>{L_LEGEND}{L_COLON} {LEGEND}</em><!-- ENDIF -->
+			<!-- EVENT index_body_block_online_append -->
+		</p>
+	</div>
 <!-- ENDIF -->
 
-<!-- IF S_DISPLAY_BIRTHDAY_LIST and BIRTHDAY_LIST -->
-	<h3 class="dark-header">{L_BIRTHDAYS}</h3>
-	<div class="dark-header-content"><!-- IF BIRTHDAY_LIST -->{L_CONGRATULATIONS}: <strong>{BIRTHDAY_LIST}</strong><!-- ELSE -->{L_NO_BIRTHDAYS}<!-- ENDIF --></div>
+<!-- IF S_DISPLAY_BIRTHDAY_LIST-->
+	<div class="stat-block birthday-list">
+		<h3 class="dark-header">{L_BIRTHDAYS}</h3>
+		<p>
+			<!-- EVENT index_body_block_birthday_prepend -->
+			<div class="dark-header-content"><!-- IF BIRTHDAY_LIST -->{L_CONGRATULATIONS}{L_COLON} <strong>{BIRTHDAY_LIST}</strong><!-- BEGIN birthdays -->{birthdays.USERNAME}<!-- IF birthdays.AGE !== '' --> ({birthdays.AGE})<!-- ENDIF --><!-- IF not birthdays.S_LAST_ROW -->, <!-- ENDIF --><!-- END birthdays --></strong><!-- ELSE -->{L_NO_BIRTHDAYS}<!-- ENDIF --></div>
+			<!-- EVENT index_body_block_birthday_append -->
+		</p>
+	</div>
 <!-- ENDIF -->
 
 <!-- IF NEWEST_USER -->
-	<h3 class="dark-header">{L_STATISTICS}</h3>
-	<div class="dark-header-content">{TOTAL_POSTS} &bull; {TOTAL_TOPICS} &bull; {TOTAL_USERS} &bull; {NEWEST_USER}</div>
+	<div class="stat-block statistics">
+		<h3 class="dark-header">{L_STATISTICS}</h3>
+		<p>
+			<!-- EVENT index_body_block_stats_prepend -->
+			<div class="dark-header-content">{TOTAL_POSTS} &bull; {TOTAL_TOPICS} &bull; {TOTAL_USERS} &bull; {NEWEST_USER}</div>
+			<!-- EVENT index_body_block_stats_append -->
+		</p>
+	</div>
 <!-- ENDIF -->
 
 
 </div>
 
 <!-- Sidebar goes below -->
+<!-- EVENT index_body_stat_blocks_after -->
 
 <!-- INCLUDE overall_footer.html -->
