@@ -3,12 +3,22 @@
 */
 
 /**
+* Find a member
+*/
+function find_username(url) {
+	'use strict';
+
+	popup(url, 760, 570, '_usersearch');
+	return false;
+}
+
+/**
 * Window popup
 */
-function popup(url, width, height, name)
-{
-	if (!name)
-	{
+function popup(url, width, height, name){
+	'use strict';
+	
+	if (!name) {
 		name = '_popup';
 	}
 
@@ -19,19 +29,19 @@ function popup(url, width, height, name)
 /**
 * Jump to page
 */
-function jumpto()
-{
-	var page = prompt(jump_page, on_page);
+function function pageJump(item) {
+	'use strict';
 
-	if (page !== null && !isNaN(page) && page == Math.floor(page) && page > 0)
-	{
-		if (base_url.indexOf('?') == -1)
-		{
-			document.location.href = base_url + '?start=' + ((page - 1) * per_page);
-		}
-		else
-		{
-			document.location.href = base_url.replace(/&amp;/g, '&') + '&start=' + ((page - 1) * per_page);
+	var page = item.val(),
+		perPage = item.attr('data-per-page'),
+		baseUrl = item.attr('data-base-url'),
+		startName = item.attr('data-start-name');
+
+	if (page !== null && !isNaN(page) && page == Math.floor(page) && page > 0) {
+		if (baseUrl.indexOf('?') === -1) {
+			document.location.href = baseUrl + '?' + startName + '=' + ((page - 1) * perPage);
+		} else {
+			document.location.href = baseUrl.replace(/&amp;/g, '&') + '&' + startName + '=' + ((page - 1) * perPage);
 		}
 	}
 }
@@ -40,53 +50,43 @@ function jumpto()
 * Mark/unmark checklist
 * id = ID of parent container, name = name prefix, state = state [true/false]
 */
-function marklist(id, name, state)
-{
-	var parent = document.getElementById(id);
-	if (!parent)
-	{
-		eval('parent = document.' + id);
-	}
-
-	if (!parent)
-	{
-		return;
-	}
+function marklist(id, name, state){
+	'use strict';
 
 	var rb = parent.getElementsByTagName('input');
 	
-	for (var r = 0; r < rb.length; r++)
-	{	
-		if (rb[r].name.substr(0, name.length) == name)
-		{
-			rb[r].checked = state;
-		}
-	}
+	jQuery('#' + id + ' input[type=checkbox][name]').each(function() {
+		var $this = jQuery(this);
+		if ($this.attr('name').substr(0, name.length) === name) {
+			$this.prop('checked', state);
+ 		}
+	});
 }
 
 /**
 * Resize viewable area for attached image or topic review panel (possibly others to come)
 * e = element
 */
-function viewableArea(e, itself)
-{
-	if (!e) return;
-	if (!itself)
-	{
+
+function viewableArea(e, itself) {
+	'use strict';
+
+	if (!e) {
+		return;
+	}
+
+	if (!itself) {
 		e = e.parentNode;
 	}
 	
-	if (!e.vaHeight)
-	{
+	if (!e.vaHeight) {
 		// Store viewable area height before changing style to auto
 		e.vaHeight = e.offsetHeight;
 		e.vaMaxHeight = e.style.maxHeight;
 		e.style.height = 'auto';
 		e.style.maxHeight = 'none';
 		e.style.overflow = 'visible';
-	}
-	else
-	{
+	} else {
 		// Restore viewable area height to the default
 		e.style.height = e.vaHeight + 'px';
 		e.style.overflow = 'auto';
@@ -96,147 +96,94 @@ function viewableArea(e, itself)
 }
 
 /**
-* Set display of page element
-* s[-1,0,1] = hide,toggle display,show
-* type = string: inline, block, inline-block or other CSS "display" type
-*/
-function dE(n, s, type)
-{
-	if (!type)
-	{
-		type = 'block';
-	}
-
-	var e = document.getElementById(n);
-	if (!s)
-	{
-		s = (e.style.display == '' || e.style.display == type) ? -1 : 1;
-	}
-	e.style.display = (s == 1) ? type : 'none';
-}
-
-/**
 * Alternate display of subPanels
 */
-function subPanels(p)
-{
+jQuery(function($) {
+	'use strict';
 	var i, e, t;
 
-	if (typeof(p) == 'string')
-	{
-		show_panel = p;
-	}
+	$('.sub-panels').each(function() {
 
-	for (i = 0; i < panels.length; i++)
-	{
-		e = document.getElementById(panels[i]);
-		t = document.getElementById(panels[i] + '-tab');
+		var $childNodes = $('a[data-subpanel]', this),
+			panels = $childNodes.map(function () {
+				return this.getAttribute('data-subpanel');
+			}),
+			showPanel = this.getAttribute('data-show-panel');
 
-		if (e)
-		{
-			if (panels[i] == show_panel)
-			{
-				e.style.display = 'block';
-				if (t)
-				{
-					t.className = 'activetab';
-				}
-			}
-			else
-			{
-				e.style.display = 'none';
-				if (t)
-				{
-					t.className = '';
-				}
-			}
-		}
-	}
-}
+		if (panels.length) {
+			activateSubPanel(showPanel, panels);
+			$childNodes.click(function () {
+				activateSubPanel(this.getAttribute('data-subpanel'), panels);
+				return false;
+			});
+ 		}
+	});
+});
 
 /**
-* Call print preview
+* Activate specific subPanel
 */
-function printPage()
-{
-	if (is_ie)
-	{
-		printPreview();
+function activateSubPanel(p, panels) {
+	'use strict';
+	var i, showPanel;
+
+	if (typeof(p) === 'string') {
+		showPanel = p;
+ 	}
+	$('input[name="show_panel"]').val(showPanel);
+	
+	if (typeof panels === 'undefined') {
+		panels = jQuery('.sub-panels a[data-subpanel]').map(function() {
+			return this.getAttribute('data-subpanel');
+		});
 	}
-	else
-	{
-		window.print();
+	
+	for (i = 0; i < panels.length; i++) {
+		jQuery('#' + panels[i]).css('display', panels[i] === showPanel ? 'block' : 'none');
+		jQuery('#' + panels[i] + '-tab').toggleClass('activetab', panels[i] === showPanel);
 	}
 }
 
-/**
-* Show/hide groups of blocks
-* c = CSS style name
-* e = checkbox element
-* t = toggle dispay state (used to show 'grip-show' image in the profile block when hiding the profiles) 
-*/
-function displayBlocks(c, e, t)
-{
-	var s = (e.checked == true) ?  1 : -1;
-
-	if (t)
-	{
-		s *= -1;
-	}
-
-	var divs = document.getElementsByTagName("DIV");
-
-	for (var d = 0; d < divs.length; d++)
-	{
-		if (divs[d].className.indexOf(c) == 0)
-		{
-			divs[d].style.display = (s == 1) ? 'none' : 'block';
-		}
-	}
-}
-
-function selectCode(a)
-{
+function selectCode(a){
+	'use strict';
+	
 	// Get ID of code block
 	var e = a.parentNode.parentNode.getElementsByTagName('CODE')[0];
-
+	var s, r;
+	
 	// Not IE and IE9+
-	if (window.getSelection)
-	{
-		var s = window.getSelection();
+	if (window.getSelection) {
+		s = window.getSelection();
 		// Safari
-		if (s.setBaseAndExtent)
-		{
-			s.setBaseAndExtent(e, 0, e, e.innerText.length - 1);
+		if (s.setBaseAndExtent) {
+			var l = (e.innerText.length > 1) ? e.innerText.length - 1 : 1;
+			s.setBaseAndExtent(e, 0, e, l);
 		}
 		// Firefox and Opera
 		else
 		{
 			// workaround for bug # 42885
-			if (window.opera && e.innerHTML.substring(e.innerHTML.length - 4) == '<BR>')
-			{
+			if (window.opera && e.innerHTML.substring(e.innerHTML.length - 4) == '<BR>') {
 				e.innerHTML = e.innerHTML + '&nbsp;';
 			}
 
-			var r = document.createRange();
+			r = document.createRange();
 			r.selectNodeContents(e);
 			s.removeAllRanges();
 			s.addRange(r);
 		}
 	}
 	// Some older browsers
-	else if (document.getSelection)
-	{
-		var s = document.getSelection();
-		var r = document.createRange();
+	else if (document.getSelection) {
+		s = document.getSelection();
+		r = document.createRange();
 		r.selectNodeContents(e);
 		s.removeAllRanges();
 		s.addRange(r);
 	}
 	// IE
-	else if (document.selection)
-	{
-		var r = document.body.createTextRange();
+	else if (document.selection) {
+		r = document.body.createTextRange();
 		r.moveToElementText(e);
 		r.select();
 	}
@@ -246,25 +193,26 @@ function selectCode(a)
 * Play quicktime file by determining it's width/height
 * from the displayed rectangle area
 */
-function play_qt_file(obj)
-{
+function play_qt_file(obj) {
+	'use strict';
+	
 	var rectangle = obj.GetRectangle();
-
-	if (rectangle)
-	{
+	var width, height;
+	
+	if (rectangle) {
 		rectangle = rectangle.split(',');
-		var x1 = parseInt(rectangle[0]);
-		var x2 = parseInt(rectangle[2]);
-		var y1 = parseInt(rectangle[1]);
-		var y2 = parseInt(rectangle[3]);
+		var x1 = parseInt(rectangle[0], 10);
+		var x2 = parseInt(rectangle[2], 10);
+		var y1 = parseInt(rectangle[1], 10);
+		var y2 = parseInt(rectangle[3], 10);
 
-		var width = (x1 < 0) ? (x1 * -1) + x2 : x2 - x1;
-		var height = (y1 < 0) ? (y1 * -1) + y2 : y2 - y1;
+		width = (x1 < 0) ? (x1 * -1) + x2 : x2 - x1;
+		height = (y1 < 0) ? (y1 * -1) + y2 : y2 - y1;
 	}
 	else
 	{
-		var width = 200;
-		var height = 0;
+		width = 200;
+		height = 0;
 	}
 
 	obj.width = width;
@@ -274,85 +222,104 @@ function play_qt_file(obj)
 	obj.Play();
 }
 
-/**
-* Check if the nodeName of elem is name
-* @author jQuery
-*/
-function is_node_name(elem, name)
-{
-	return elem.nodeName && elem.nodeName.toUpperCase() == name.toUpperCase();
-}
-
-/**
-* Check if elem is in array, return position
-* @author jQuery
-*/
-function is_in_array(elem, array)
-{
-	for (var i = 0, length = array.length; i < length; i++)
-		// === is correct (IE)
-		if (array[i] === elem)
-			return i;
-
-	return -1;
-}
-
-/**
-* Find Element, type and class in tree
-* Not used, but may come in handy for those not using JQuery
-* @author jQuery.find, Meik Sievertsen
-*/
-function find_in_tree(node, tag, type, class_name)
-{
-	var result, element, i = 0, length = node.childNodes.length;
-
-	for (element = node.childNodes[0]; i < length; element = node.childNodes[++i])
-	{
-		if (!element || element.nodeType != 1) continue;
-
-		if ((!tag || is_node_name(element, tag)) && (!type || element.type == type) && (!class_name || is_in_array(class_name, (element.className || element).toString().split(/\s+/)) > -1))
-		{
-			return element;
-		}
-
-		if (element.childNodes.length)
-			result = find_in_tree(element, tag, type, class_name);
-
-		if (result) return result;
-	}
-}
-
-var in_autocomplete = false;
-var last_key_entered = '';
+var inAutocomplete = false;
+var lastKeyEntered = '';
 
 /**
 * Check event key
 */
-function phpbb_check_key(event)
-{
+function phpbbCheckKey(event) {
+	'use strict';
+
 	// Keycode is array down or up?
-	if (event.keyCode && (event.keyCode == 40 || event.keyCode == 38))
-		in_autocomplete = true;
+	if (event.keyCode && (event.keyCode === 40 || event.keyCode === 38)) {
+		inAutocomplete = true;
+	}
 
 	// Make sure we are not within an "autocompletion" field
-	if (in_autocomplete)
-	{
+	if (inAutocomplete) {
 		// If return pressed and key changed we reset the autocompletion
-		if (!last_key_entered || last_key_entered == event.which)
-		{
-			in_autocompletion = false;
+		if (!lastKeyEntered || lastKeyEntered === event.which) {
+			inAutocomplete = false;
 			return true;
 		}
 	}
 
 	// Keycode is not return, then return. ;)
-	if (event.which != 13)
-	{
-		last_key_entered = event.which;
+	if (event.which !== 13) {
+		lastKeyEntered = event.which;
 		return true;
 	}
 
 	return false;
+}
+
+/**
+* Apply onkeypress event for forcing default submit button on ENTER key press
+*/
+jQuery(function($) {
+	'use strict';
+	
+	var result, element, i = 0, length = node.childNodes.length;
+
+	$('form input[type=text], form input[type=password]').on('keypress', function (e) {
+		var defaultButton = $(this).parents('form').find('input[type=submit].default-submit-action');
+ 
+		if (!element || element.nodeType != 1) continue;
+
+		if (!defaultButton || defaultButton.length <= 0) {
+			return true;
+ 		}
+
+		if (phpbbCheckKey(e)) {
+			return true;
+		}
+
+		if ((e.which && e.which === 13) || (e.keyCode && e.keyCode === 13)) {
+			defaultButton.click();
+			return false;
+		}
+		
+		return true;
+	});
+});
+ 
+
+/**
+* Functions for user search popup
+*/
+function insertUser(formId, value) {
+	'use strict';
+
+	var $form = jQuery(formId),
+		formName = $form.attr('data-form-name'),
+		fieldName = $form.attr('data-field-name'),
+		item = opener.document.forms[formName][fieldName];
+
+	if (item.value.length && item.type == 'textarea') {
+		value = item.value + '\n' + value;
+	}
+
+	item.value = value;
+}
+
+function insert_marked_users(formId, users) {
+	'use strict';
+
+	for (var i = 0; i < users.length; i++) {
+		if (users[i].checked) {
+			insertUser(formId, users[i].value);
+		}
+ 	}
+
+	window.close();
+}
+
+function insert_single_user(formId, user) {
+	'use strict';
+
+	insertUser(formId, user);
+	window.close();
 }
 
 /**
